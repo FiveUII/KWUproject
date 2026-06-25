@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ResQFood - Solusi Penyelamat Makanan F&B Surplus</title>
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="style.css">
+    
+    <!-- Meta tags for basic SEO -->
+    <meta name="description" content="Selamatkan makanan surplus berkualitas dari bisnis F&B favorit Anda dengan harga diskon besar. Kurangi sampah makanan, selamatkan bumi!">
+    <meta name="keywords" content="food waste, food rescue, makanan diskon, sisa makanan resto, hemat makanan, ramah lingkungan">
+    
+    <!-- Favicon / Leaf Icon -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🍃</text></svg>">
+</head>
+<body>
+
+    <!-- App Header -->
+    <header id="app-header">
+        <div class="brand" onclick="window.location.reload()">
+            <span class="brand-icon">🥦</span>
+            <span>ResQFood</span>
+        </div>
+        
+        <div class="header-controls">
+            <!-- Profile Selector Dropdown -->
+            <div class="profile-select-container" style="margin-right: 1rem; display: flex; align-items: center; gap: 0.5rem;">
+                <label for="profile-selector" style="font-size: 0.8rem; font-weight: 700; color: var(--primary-dark);">Akun:</label>
+                <select id="profile-selector" onchange="handleProfileChange(this.value)" style="padding: 0.4rem 0.8rem; border-radius: var(--radius-md); border: 2px solid var(--primary-light); background: white; font-weight: 600; cursor: pointer; color: var(--primary-dark); font-size: 0.85rem; outline: none;">
+                    <optgroup label="Konsumen">
+                        <option value="cust-1">🛒 ResQ Hero Favia</option>
+                    </optgroup>
+                    <optgroup label="Merchant F&B">
+                        <option value="merch-1">🍣 Sakura Sushi Dago</option>
+                        <option value="merch-2">🍞 La Boulangerie French Bakery</option>
+                        <option value="merch-3">🥗 Healthy & Co Salad Bar</option>
+                    </optgroup>
+                </select>
+            </div>
+
+            <!-- Role Switcher Toggle (Hidden, replaced by dropdown selector) -->
+            <div class="role-switch-container" style="display: none;">
+                <button id="role-customer-btn" class="role-btn active" onclick="setRole('customer')">
+                    <span>🛒</span> Konsumen
+                </button>
+                <button id="role-merchant-btn" class="role-btn" onclick="setRole('merchant')">
+                    <span>🏢</span> Merchant F&B
+                </button>
+            </div>
+            
+            <!-- Dynamic Impact Badge -->
+            <div class="user-impact-badge" id="user-impact-badge">
+                <span>Saving Planet:</span>
+                <span class="impact-value" id="header-eco-score">🌳 0.0 kg CO₂ Saved</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main>
+        
+        <!-- ================= CUSTOMER PORTAL ================= -->
+        <section id="customer-portal" class="dashboard-section active">
+            <!-- Hero Banner -->
+            <div class="hero">
+                <div class="hero-content">
+                    <h1>Selamatkan Makanan Lezat, Hemat Kantong Anda!</h1>
+                    <p>Setiap hari, restoran dan kafe memiliki sisa makanan jadi yang lezat dan layak makan namun tidak terjual. Beli makanan surplus ini dengan diskon hingga 70% dan bantu kurangi emisi CO₂ bumi!</p>
+                    <button class="hero-btn" onclick="document.getElementById('explore-anchor').scrollIntoView({behavior: 'smooth'})">
+                        Mulai Selamatkan Makanan <span>👉</span>
+                    </button>
+                </div>
+                <div class="hero-image-container">
+                    <img src="assets/hero.png" alt="ResQFood Hero Illustration">
+                </div>
+            </div>
+
+            <!-- Explore Anchor for scrolling -->
+            <div id="explore-anchor" style="padding-top: 1rem;"></div>
+
+            <!-- Customer Navigation Tabs -->
+            <div class="portal-tabs">
+                <button id="tab-browse-btn" class="portal-tab-btn active" onclick="switchCustomerTab('browse')">
+                    🔍 Jelajahi Makanan
+                </button>
+                <button id="tab-orders-btn" class="portal-tab-btn" onclick="switchCustomerTab('orders')">
+                    📋 Pesanan Saya (Rescued)
+                </button>
+            </div>
+
+            <!-- Tab 1: Browse Listings -->
+            <div id="customer-browse-view">
+                <!-- Search & Filters -->
+                <div class="search-filter-bar">
+                    <div class="search-input-wrapper">
+                        <span class="search-icon">🔍</span>
+                        <input type="text" id="search-input" placeholder="Cari makanan, roti, sushi, atau nama outlet...">
+                    </div>
+                    
+                    <div class="category-filters">
+                        <button class="category-btn active" onclick="setCategoryFilter('all', this)">
+                            Semua Makanan
+                        </button>
+                        <button class="category-btn" onclick="setCategoryFilter('bakery', this)">
+                            🍞 Roti & Pastry
+                        </button>
+                        <button class="category-btn" onclick="setCategoryFilter('meals', this)">
+                            🍱 Makanan Berat
+                        </button>
+                        <button class="category-btn" onclick="setCategoryFilter('groceries', this)">
+                            🍎 Bahan Makanan
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Active Listings Grid -->
+                <div class="listings-grid" id="listings-feed">
+                    <!-- Dynamic Listings Rendered by JS -->
+                </div>
+            </div>
+
+            <!-- Tab 2: Customer Orders & Savings -->
+            <div id="customer-orders-view" style="display: none;">
+                <!-- Customer Stats Panel -->
+                <div class="merchant-stats-grid" style="margin-bottom: 2rem;">
+                    <div class="stat-card">
+                        <div class="stat-icon-box orange">💰</div>
+                        <div class="stat-details">
+                            <h4>Uang Dihemat</h4>
+                            <div class="stat-number" id="cust-stat-cash">Rp 0</div>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon-box green">🌳</div>
+                        <div class="stat-details">
+                            <h4>CO₂ Dicegah</h4>
+                            <div class="stat-number" id="cust-stat-co2">0.0 kg</div>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon-box blue">🏆</div>
+                        <div class="stat-details">
+                            <h4>ResQ Poin</h4>
+                            <div class="stat-number" id="cust-stat-points">0 Poin</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="dashboard-panel-card" style="max-width: 800px; margin: 0 auto;">
+                    <div class="panel-title-row">
+                        <h3>Daftar Penyelamatan Makanan Anda</h3>
+                    </div>
+                    <div class="orders-list" id="customer-orders-list">
+                        <!-- Dynamic Orders Rendered by JS -->
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= MERCHANT PORTAL ================= -->
+        <section id="merchant-portal" class="dashboard-section">
+            <!-- Merchant Stats Grid -->
+            <div class="merchant-stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon-box green">🍲</div>
+                    <div class="stat-details">
+                        <h4>Porsi Diselamatkan</h4>
+                        <div class="stat-number" id="merch-stat-sales">0</div>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon-box orange">💸</div>
+                    <div class="stat-details">
+                        <h4>Pendapatan Tambahan</h4>
+                        <div class="stat-number" id="merch-stat-revenue">Rp 0</div>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon-box blue">🍃</div>
+                    <div class="stat-details">
+                        <h4>Sampah Makanan Dikurangi</h4>
+                        <div class="stat-number" id="merch-stat-co2">0.0 kg CO₂</div>
+                    </div>
+                </div>
+            </div>
+            <!-- Merchant Portal Tabs -->
+            <div class="portal-tabs" style="margin-bottom: 2rem; display: flex; gap: 1rem; border-bottom: 2px solid #e2e8f0; padding-bottom: 0.5rem;">
+                <button id="tab-merch-manage-btn" class="portal-tab-btn active" onclick="switchMerchantTab('manage')" style="background: none; border: none; font-size: 1rem; font-weight: 700; color: var(--primary); padding: 0.5rem 1rem; cursor: pointer; border-bottom: 3px solid var(--primary); outline: none;">
+                    ⚙️ Kelola Toko & Order
+                </button>
+                <button id="tab-merch-finance-btn" class="portal-tab-btn" onclick="switchMerchantTab('finance')" style="background: none; border: none; font-size: 1rem; font-weight: 600; color: var(--text-muted); padding: 0.5rem 1rem; cursor: pointer; border-bottom: 3px solid transparent; outline: none;">
+                    📈 Laporan Keuangan & Analitik
+                </button>
+            </div>
+
+            <div id="merchant-manage-view">
+                <!-- Merchant Layout Split -->
+                <div class="merchant-split-layout">
+                    
+                    <!-- Left Column: Add Listing Form -->
+                    <div class="dashboard-panel-card">
+                        <div class="panel-title-row">
+                            <h3>📢 Tawarkan Makanan Surplus Baru</h3>
+                        </div>
+                        <form id="add-listing-form">
+                            <div class="form-group">
+                                <label for="food-name">Nama Makanan / Paket</label>
+                                <input type="text" id="food-name" class="form-input" placeholder="Contoh: Paket Donat Aneka Rasa isi 6" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="category">Kategori Makanan</label>
+                                <select id="category" class="form-input" required>
+                                    <option value="Bakery">🍞 Roti & Pastry</option>
+                                    <option value="Meals">🍱 Makanan Berat</option>
+                                    <option value="Groceries">🍎 Bahan Makanan</option>
+                                </select>
+                            </div>
+
+                            <div class="form-row-2">
+                                <div class="form-group">
+                                    <label for="original-price">Harga Normal (Rp)</label>
+                                    <input type="number" id="original-price" class="form-input" min="1000" step="500" placeholder="Contoh: 50000" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="discount-price">Harga Diskon ResQ (Rp)</label>
+                                    <input type="number" id="discount-price" class="form-input" min="500" step="500" placeholder="Contoh: 15000" required>
+                                </div>
+                            </div>
+
+                            <div class="form-row-2">
+                                <div class="form-group">
+                                    <label for="quantity">Jumlah Porsi Tersedia</label>
+                                    <input type="number" id="quantity" class="form-input" min="1" max="50" placeholder="Contoh: 5" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="pickup-time">Waktu Pengambilan</label>
+                                    <input type="text" id="pickup-time" class="form-input" placeholder="Contoh: 18:00 - 20:00" required>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="expiry-time">Tanggal & Waktu Kedaluwarsa</label>
+                                <input type="datetime-local" id="expiry-time" class="form-input" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="description">Deskripsi & Instruksi Alergi</label>
+                                <textarea id="description" class="form-input" rows="3" placeholder="Jelaskan kondisi makanan, isi paket, atau imbauan alergen..."></textarea>
+                            </div>
+
+                            <button type="submit" class="btn-submit">
+                                <span>🚀</span> Publikasikan Penawaran
+                            </button>
+                        </form>
+                    </div>
+
+                    <!-- Right Column: Listing Management & Active Claims -->
+                    <div>
+                        <!-- Active Offers Panel -->
+                        <div class="dashboard-panel-card">
+                            <div class="panel-title-row">
+                                <h3>📋 Kelola Penawaran Aktif</h3>
+                            </div>
+                            <div class="custom-table-container">
+                                <table class="custom-table">
+                                   <thead>
+                                       <tr>
+                                           <th>Makanan</th>
+                                           <th>Harga</th>
+                                           <th>Stok</th>
+                                           <th>Status</th>
+                                           <th>Aksi</th>
+                                       </tr>
+                                   </thead>
+                                   <tbody id="merchant-listings-body">
+                                       <!-- Dynamic Table Rows Rendered by JS -->
+                                   </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- Customer Claims (Orders waiting for pickup) -->
+                        <div class="dashboard-panel-card">
+                            <div class="panel-title-row">
+                                <h3>🛍️ Pesanan Menunggu Pengambilan</h3>
+                            </div>
+                            <div class="orders-list" id="merchant-orders-list">
+                                <!-- Dynamic Active Claims Rendered by JS -->
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div> <!-- End merchant-manage-view -->
+
+            <!-- Tab 2: Merchant Financial Reports & Analytics -->
+            <div id="merchant-finance-view" style="display: none;">
+                <div class="merchant-split-layout">
+                    <!-- Left: Analytics Summary & Success Gauge -->
+                    <div class="dashboard-panel-card">
+                        <div class="panel-title-row">
+                            <h3>📊 Ringkasan Kinerja Penjualan</h3>
+                        </div>
+                        
+                        <div style="margin-top: 1.5rem;">
+                            <h4 style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 0.8rem;">Porsi Terjual Berdasarkan Kategori</h4>
+                            <div id="category-chart-container" style="display: flex; flex-direction: column; gap: 1rem;">
+                                <!-- Rendered dynamically by JS -->
+                            </div>
+                        </div>
+
+                        <div style="margin-top: 2rem;">
+                            <h4 style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 0.8rem;">Tingkat Keberhasilan Klaim</h4>
+                            <div style="display: flex; align-items: center; gap: 1.5rem; background: #F8FAFC; padding: 1.2rem; border-radius: var(--radius-md); border: 1px solid #E2E8F0;">
+                                <div id="claim-success-rate" style="font-size: 2.2rem; font-weight: 800; color: var(--primary);">0%</div>
+                                <div style="font-size: 0.8rem; color: var(--text-muted); line-height: 1.4;">
+                                    Persentase pesanan diserahkan (claimed) dari total pesanan masuk. Pemesanan yang dibatalkan tidak terhitung sukses.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right: Daily Revenue Chart & List -->
+                    <div class="dashboard-panel-card">
+                        <div class="panel-title-row">
+                            <h3>💰 Tren Pendapatan Harian</h3>
+                        </div>
+                        
+                        <!-- CSS bar chart container -->
+                        <div id="revenue-chart-container" style="display: flex; align-items: flex-end; justify-content: space-around; height: 180px; padding: 1.5rem 0.5rem 0.5rem 0.5rem; border-bottom: 2px solid #E2E8F0; margin-bottom: 1.5rem; gap: 0.5rem;">
+                            <!-- Rendered dynamically by JS -->
+                        </div>
+                        
+                        <div class="panel-title-row" style="margin-top: 1.5rem;">
+                            <h3>📋 Riwayat Keuangan Transaksi</h3>
+                        </div>
+                        <div class="custom-table-container">
+                            <table class="custom-table" style="font-size: 0.85rem;">
+                               <thead>
+                                   <tr>
+                                       <th>ID Order</th>
+                                       <th>Tanggal & Waktu</th>
+                                       <th>Pendapatan</th>
+                                   </tr>
+                               </thead>
+                               <tbody id="merchant-financial-history-body">
+                                   <!-- Dynamic Table Rows -->
+                               </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- ================= MODALS & POP-UPS ================= -->
+    <!-- Reservation / Checkout Confirmation Modal -->
+    <div class="modal-overlay" id="checkout-modal">
+        <div class="modal-card">
+            <div class="modal-header">
+                <h3 class="modal-title">Konfirmasi Penyelamatan Makanan</h3>
+                <button class="modal-close-btn" onclick="closeReservationModal()">✕</button>
+            </div>
+            
+            <div style="margin-bottom: 1.2rem;">
+                <h4 id="modal-food-title" style="color: var(--primary-dark); font-size: 1.2rem; margin-bottom: 0.2rem;">Nama Makanan</h4>
+                <p id="modal-merchant-name" style="font-size: 0.85rem; color: var(--primary-light); font-weight: 600;">Nama Merchant</p>
+            </div>
+
+            <!-- Qty selector inside checkout -->
+            <div class="checkout-qty-select">
+                <label>Jumlah Porsi:</label>
+                <button class="qty-control-btn" onclick="changeOrderQty(-1)">-</button>
+                <span class="qty-number" id="qty-display">1</span>
+                <button class="qty-control-btn" onclick="changeOrderQty(1)">+</button>
+            </div>
+
+            <!-- Total breakdown card -->
+            <div class="checkout-details">
+                <div class="checkout-row">
+                    <span>Harga Satuan:</span>
+                    <span id="modal-discount-price" style="font-weight: 700;">Rp 0</span>
+                </div>
+                <div class="checkout-row">
+                    <span>Harga Asli Satuan:</span>
+                    <span id="modal-original-price" style="text-decoration: line-through; color: var(--text-muted);">Rp 0</span>
+                </div>
+                <div class="checkout-row">
+                    <span>Jumlah Porsi:</span>
+                    <span id="checkout-qty">1 Porsi</span>
+                </div>
+                <div class="checkout-row">
+                    <span>Estimasi CO₂ Diselamatkan:</span>
+                    <span id="checkout-co2" style="color: var(--primary); font-weight: 600;">1.5 kg CO₂</span>
+                </div>
+                <div class="checkout-row">
+                    <span>Uang yang Anda Hemat:</span>
+                    <span id="checkout-savings" style="color: var(--accent-orange); font-weight: 700;">Rp 0</span>
+                </div>
+                <div class="checkout-row total">
+                    <span>Total Pembayaran:</span>
+                    <span id="checkout-total">Rp 0</span>
+                </div>
+            </div>
+
+            <div style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 1.5rem; background: #FFF9F2; padding: 0.6rem; border-radius: var(--radius-sm); border: 1px solid #FFE9D2;">
+                ⚠️ <strong>Ketentuan Pengambilan:</strong> Ambil pesanan langsung di toko sebelum batas akhir pengambilan: <strong id="modal-pickup-time">18:00</strong>. Tunjukkan halaman pesanan saat mengambil.
+            </div>
+
+            <button class="btn-submit" onclick="confirmCheckout()">
+                🔒 Konfirmasi & Pesan (Bayar di Kasir)
+            </button>
+        </div>
+    </div>
+
+    <!-- Notification Toast -->
+    <div class="toast-notification" id="toast">
+        <span class="toast-icon">🎉</span>
+        <span class="toast-text">Tindakan Berhasil!</span>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-logo">
+            <span>🥦</span> ResQFood MVP
+        </div>
+        <p>Aplikasi Penyelamat Sampah Makanan Bisnis F&B Indonesia.</p>
+        <p style="font-size: 0.75rem; margin-top: 0.5rem; color: var(--text-muted);">© 2026 ResQFood. Dibuat dengan cinta untuk masa depan bumi yang lebih hijau.</p>
+    </footer>
+
+    <!-- App JavaScript -->
+    <script src="app.js"></script>
+</body>
+</html>
