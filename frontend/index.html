@@ -52,8 +52,8 @@
             
             <!-- Dynamic Impact Badge -->
             <div class="user-impact-badge" id="user-impact-badge">
-                <span>Saving Planet:</span>
-                <span class="impact-value" id="header-eco-score">🌳 0.0 kg CO₂ Saved</span>
+                <span>Uang Dihemat:</span>
+                <span class="impact-value" id="header-eco-score">💰 Rp 0</span>
             </div>
         </div>
     </header>
@@ -67,7 +67,7 @@
             <div class="hero">
                 <div class="hero-content">
                     <h1>Selamatkan Makanan Lezat, Hemat Kantong Anda!</h1>
-                    <p>Setiap hari, restoran dan kafe memiliki sisa makanan jadi yang lezat dan layak makan namun tidak terjual. Beli makanan surplus ini dengan diskon hingga 70% dan bantu kurangi emisi CO₂ bumi!</p>
+                    <p>Setiap hari, restoran dan kafe memiliki sisa makanan jadi yang lezat dan layak makan namun tidak terjual. Beli makanan surplus ini dengan diskon hingga 70% dan bantu kurangi food waste!</p>
                     <button class="hero-btn" onclick="document.getElementById('explore-anchor').scrollIntoView({behavior: 'smooth'})">
                         Mulai Selamatkan Makanan <span>👉</span>
                     </button>
@@ -123,20 +123,12 @@
 
             <!-- Tab 2: Customer Orders & Savings -->
             <div id="customer-orders-view" style="display: none;">
-                <!-- Customer Stats Panel -->
                 <div class="merchant-stats-grid" style="margin-bottom: 2rem;">
                     <div class="stat-card">
                         <div class="stat-icon-box orange">💰</div>
                         <div class="stat-details">
                             <h4>Uang Dihemat</h4>
                             <div class="stat-number" id="cust-stat-cash">Rp 0</div>
-                        </div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-icon-box green">🌳</div>
-                        <div class="stat-details">
-                            <h4>CO₂ Dicegah</h4>
-                            <div class="stat-number" id="cust-stat-co2">0.0 kg</div>
                         </div>
                     </div>
                     <div class="stat-card">
@@ -162,11 +154,11 @@
         <!-- ================= MERCHANT PORTAL ================= -->
         <section id="merchant-portal" class="dashboard-section">
             <!-- Merchant Stats Grid -->
-            <div class="merchant-stats-grid">
+            <div class="merchant-stats-grid" style="margin-bottom: 2rem;">
                 <div class="stat-card">
-                    <div class="stat-icon-box green">🍲</div>
+                    <div class="stat-icon-box green">🛍️</div>
                     <div class="stat-details">
-                        <h4>Porsi Diselamatkan</h4>
+                        <h4>Total Pesanan</h4>
                         <div class="stat-number" id="merch-stat-sales">0</div>
                     </div>
                 </div>
@@ -175,13 +167,6 @@
                     <div class="stat-details">
                         <h4>Pendapatan Tambahan</h4>
                         <div class="stat-number" id="merch-stat-revenue">Rp 0</div>
-                    </div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-icon-box blue">🍃</div>
-                    <div class="stat-details">
-                        <h4>Sampah Makanan Dikurangi</h4>
-                        <div class="stat-number" id="merch-stat-co2">0.0 kg CO₂</div>
                     </div>
                 </div>
             </div>
@@ -394,10 +379,7 @@
                     <span>Jumlah Porsi:</span>
                     <span id="checkout-qty">1 Porsi</span>
                 </div>
-                <div class="checkout-row">
-                    <span>Estimasi CO₂ Diselamatkan:</span>
-                    <span id="checkout-co2" style="color: var(--primary); font-weight: 600;">1.5 kg CO₂</span>
-                </div>
+
                 <div class="checkout-row">
                     <span>Uang yang Anda Hemat:</span>
                     <span id="checkout-savings" style="color: var(--accent-orange); font-weight: 700;">Rp 0</span>

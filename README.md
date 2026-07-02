@@ -6,7 +6,7 @@ ResQFood adalah MVP (Minimum Viable Product) untuk platform manajemen makanan su
 ## Fitur Utama ✨
 - **Dynamic Pricing:** Harga diskon otomatis bertambah seiring mendekatnya waktu kedaluwarsa (hingga 50% tambahan diskon!).
 - **Dashboard Merchant:** Untuk mengelola listing makanan surplus, melihat analitik penjualan, dan mengonfirmasi klaim pesanan.
-- **Portal Konsumen:** Untuk mencari, memesan, dan melacak dampak lingkungan (CO2 yang diselamatkan & uang yang dihemat).
+- **Portal Konsumen:** Untuk mencari, memesan, dan melacak penghematan uang.
 - **Gamifikasi:** Pengguna mendapatkan ResQ Poin dari setiap makanan yang diselamatkan.
 
 ## Arsitektur & Teknologi 🛠️

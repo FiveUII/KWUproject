@@ -113,17 +113,17 @@ function updateHeaderImpactBadge() {
     const impactBadge = document.getElementById('user-impact-badge');
     if (!impactBadge) return;
     
-    const co2 = appState.savings.customerCO2 !== undefined ? appState.savings.customerCO2 : 0;
+    const cash = appState.savings.customerCashSaved !== undefined ? appState.savings.customerCashSaved : 0;
     const revenue = appState.savings.merchantRevenue !== undefined ? appState.savings.merchantRevenue : 0;
 
     if (appState.currentRole === 'customer') {
         impactBadge.innerHTML = `
-            <span>Saving Planet: </span>
-            <span class="impact-value" id="header-eco-score">🌳 ${co2.toFixed(1)} kg CO₂ Saved</span>
+            <span>Uang Dihemat: </span>
+            <span class="impact-value" id="header-eco-score">💰 ${formatRupiah(cash)}</span>
         `;
     } else {
         impactBadge.innerHTML = `
-            <span>Merchant Revenue: </span>
+            <span>Pendapatan: </span>
             <span class="impact-value" id="header-eco-score">💰 ${formatRupiah(revenue)}</span>
         `;
     }
@@ -343,12 +343,10 @@ function updateCheckoutCalculation() {
     const subtotal = activeListingForOrder.discountPrice * orderQuantity;
     const originalSubtotal = activeListingForOrder.originalPrice * orderQuantity;
     const savings = originalSubtotal - subtotal;
-    const co2Saved = 1.5 * orderQuantity; // Estimate 1.5kg CO2 saved per meal
     
     document.getElementById('checkout-qty').innerText = `${orderQuantity} Porsi`;
     document.getElementById('checkout-total').innerText = formatRupiah(subtotal);
     document.getElementById('checkout-savings').innerText = formatRupiah(savings);
-    document.getElementById('checkout-co2').innerText = `${co2Saved.toFixed(1)} kg CO₂`;
 }
 
 async function confirmCheckout() {
@@ -441,12 +439,10 @@ function renderCustomerOrders() {
     container.innerHTML = '';
     
     const cash = appState.savings.customerCashSaved !== undefined ? appState.savings.customerCashSaved : 0;
-    const co2 = appState.savings.customerCO2 !== undefined ? appState.savings.customerCO2 : 0;
     const points = appState.savings.customerCoins !== undefined ? appState.savings.customerCoins : 0;
 
     // Update Stats Display in Customer Dashboard Panel
     document.getElementById('cust-stat-cash').innerText = formatRupiah(cash);
-    document.getElementById('cust-stat-co2').innerText = `${co2.toFixed(1)} kg`;
     document.getElementById('cust-stat-points').innerText = `${points} Poin`;
     
     if (appState.orders.length === 0) {
@@ -542,12 +538,10 @@ function switchMerchantTab(tab) {
 function renderMerchantPortal() {
     const sales = appState.savings.merchantSales !== undefined ? appState.savings.merchantSales : 0;
     const revenue = appState.savings.merchantRevenue !== undefined ? appState.savings.merchantRevenue : 0;
-    const co2 = appState.savings.merchantCO2 !== undefined ? appState.savings.merchantCO2 : 0;
 
     // Update Stats Display in Merchant Dashboard
     document.getElementById('merch-stat-sales').innerText = sales;
     document.getElementById('merch-stat-revenue').innerText = formatRupiah(revenue);
-    document.getElementById('merch-stat-co2').innerText = `${co2.toFixed(1)} kg CO₂`;
     
     updateHeaderImpactBadge();
     renderMerchantListingsTable();
