@@ -31,7 +31,7 @@
 
 - 🛍️ Konsumen memesan makanan dan mengambilnya langsung di toko *(bayar di kasir)*
 - 📊 Merchant memantau pesanan masuk & laporan keuangan harian
-- 🌍 Sistem mencatat dampak lingkungan: **kg CO₂ yang berhasil dicegah** per transaksi
+- 📊 Merchant memantau pesanan masuk & laporan keuangan harian
 
 ---
 
@@ -42,7 +42,7 @@
 - ✅ Beli makanan berkualitas dari restoran terpercaya dengan **diskon hingga 70%**
 - ✅ Makin mendekati kedaluwarsa → **makin murah secara otomatis**
 - ✅ Dapat **ResQ Poin** dari setiap pembelian
-- ✅ Tahu berapa **CO₂ dan uang yang berhasil dihemat** secara real-time
+- ✅ Tahu berapa **uang yang berhasil dihemat** secara real-time
 
 ### Untuk Merchant F&B 🏪
 - ✅ Hasilkan **pendapatan tambahan** dari makanan yang sebelumnya akan dibuang
@@ -71,7 +71,7 @@
 - 🏪 Merchant mendapat **dashboard mandiri** untuk kelola toko & laporan keuangan
 - 🔔 Sistem **notifikasi langsung** (toast) di aplikasi saat pesanan dikonfirmasi
 - 📋 **Transparansi penuh**: konsumen tahu berapa porsi tersisa, jam pengambilan, dan dampak lingkungan
-- 🏆 Sistem **gamifikasi**: ResQ Poin dan papan CO₂ saved untuk mendorong loyalitas
+- 🏆 Sistem **gamifikasi**: ResQ Poin untuk mendorong loyalitas
 
 ---
 
@@ -123,7 +123,7 @@
 
 ## 🌍 Proposisi Inti ResQFood
 
-> **ResQFood menjadi jembatan antara makanan surplus dari restoran dan konsumen yang ingin berhemat, sambil secara nyata mengurangi sampah makanan dan emisi CO₂ di Indonesia.**
+> **ResQFood menjadi jembatan antara makanan surplus dari restoran dan konsumen yang ingin berhemat, sambil secara nyata mengurangi sampah makanan di Indonesia.**
 
 ```
 Merchant punya sisa makanan → ResQFood tampilkan dengan harga diskon → 

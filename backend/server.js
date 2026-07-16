@@ -86,7 +86,6 @@ function mapOrder(row) {
     pickupTime: row.pickup_time,
     status: row.status,
     date: row.date,
-    co2Saved: row.co2_saved,
     cashSaved: row.cash_saved
   };
 }
@@ -254,7 +253,6 @@ app.post('/api/orders', async (req, res) => {
     pickupTime,
     status,
     date,
-    co2Saved,
     cashSaved,
   } = req.body;
 
@@ -309,7 +307,7 @@ app.post('/api/orders', async (req, res) => {
         pickupTime,
         status || 'pending',
         date,
-        co2Saved,
+        0,
         cashSaved,
       ]
     );
@@ -399,7 +397,6 @@ app.get('/api/savings', async (req, res) => {
       const result = await query(
         `SELECT 
            COALESCE(SUM(CASE WHEN status != 'cancelled' THEN quantity * 10 ELSE 0 END), 0)::integer AS customer_coins,
-           COALESCE(SUM(CASE WHEN status != 'cancelled' THEN co2_saved ELSE 0.0 END), 0.0)::real AS customer_co2,
            COALESCE(SUM(CASE WHEN status != 'cancelled' THEN cash_saved ELSE 0 END), 0)::integer AS customer_cash_saved
          FROM orders
          WHERE customer_id = $1`,
@@ -408,7 +405,6 @@ app.get('/api/savings', async (req, res) => {
       const row = result.rows[0];
       res.json({
         customerCoins: row.customer_coins,
-        customerCO2: row.customer_co2,
         customerCashSaved: row.customer_cash_saved
       });
     } else if (merchantId) {
@@ -416,7 +412,6 @@ app.get('/api/savings', async (req, res) => {
         `SELECT 
            COALESCE(SUM(quantity), 0)::integer AS merchant_sales,
            COALESCE(SUM(total_price), 0)::integer AS merchant_revenue,
-           COALESCE(SUM(co2_saved), 0.0)::real AS merchant_co2
          FROM orders
          WHERE merchant_id = $1 AND status = 'claimed'`,
         [merchantId]
@@ -424,8 +419,7 @@ app.get('/api/savings', async (req, res) => {
       const row = result.rows[0];
       res.json({
         merchantSales: row.merchant_sales,
-        merchantRevenue: row.merchant_revenue,
-        merchantCO2: row.merchant_co2
+        merchantRevenue: row.merchant_revenue
       });
     } else {
       res.status(400).json({ error: 'Missing customerId or merchantId query parameters' });

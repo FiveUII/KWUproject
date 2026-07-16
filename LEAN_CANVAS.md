@@ -62,7 +62,6 @@
 - 🌐 Platform web **tanpa install** — *frictionless onboarding* untuk semua segmen
 - 📈 Data historis transaksi yang terakumulasi → **network effect**
 - 🥦 Branding **"food rescue"** yang kuat di komunitas peduli lingkungan
-- 🐳 Infrastruktur **Docker** yang memudahkan scaling & deployment cepat
 
 ---
 
@@ -103,7 +102,6 @@
 - 📱 **Media sosial** & komunitas pencinta lingkungan (Instagram, TikTok, WhatsApp Group)
 - 🤝 **Kerja sama B2B langsung** dengan restoran & kafe lokal
 - 👄 **Word of mouth** dari konsumen yang sudah hemat dan puas
-- 🐳 Kemudahan deploy via **Docker Compose** untuk mitra teknologi
 
 ---
 

@@ -11,11 +11,11 @@ let appState = {
     orders: [],
     savings: {
         customerCoins: 0,
-        customerCO2: 0,
+
         customerCashSaved: 0,
         merchantSales: 0,
         merchantRevenue: 0,
-        merchantCO2: 0
+
     }
 };
 
@@ -362,7 +362,7 @@ async function confirmCheckout() {
     const subtotal = listing.discountPrice * orderQuantity;
     const originalSubtotal = listing.originalPrice * orderQuantity;
     const savingsAmount = originalSubtotal - subtotal;
-    const co2Reduction = 1.5 * orderQuantity;
+
     
     const orderId = `FW-${Date.now().toString().slice(-6)}`;
     
@@ -378,7 +378,7 @@ async function confirmCheckout() {
         pickupTime: listing.pickupTime,
         status: 'pending',
         date: dateStr,
-        co2Saved: co2Reduction,
+        co2Saved: 0,
         cashSaved: savingsAmount
     };
 
