@@ -67,7 +67,6 @@ async function initDb() {
         pickup_time VARCHAR(100) NOT NULL,
         status VARCHAR(20) NOT NULL, -- 'pending', 'claimed', 'cancelled'
         date VARCHAR(100) NOT NULL,
-        co2_saved REAL NOT NULL,
         cash_saved INT NOT NULL
       );
     `);
@@ -144,13 +143,13 @@ async function initDb() {
     // Order dates will look like: "08:15 08/06/2026", "19:30 09/06/2026", "12:10 10/06/2026"
     // Since today is 11-Jun-26, these represent historical data.
     await client.query(`
-      INSERT INTO orders (id, listing_id, merchant_id, customer_id, food_title, merchant_name, quantity, total_price, pickup_time, status, date, co2_saved, cash_saved)
+      INSERT INTO orders (id, listing_id, merchant_id, customer_id, food_title, merchant_name, quantity, total_price, pickup_time, status, date, cash_saved)
       VALUES 
-      ('FW-hist1', 'mock-1', 'merch-1', 'cust-1', 'Premium Salmon Sushi Platter', 'Sakura Sushi Dago', 2, 76000, '17:30 - 20:00 Hari Ini', 'claimed', '18:15 08/06/2026', 0, 114000),
-      ('FW-hist2', 'mock-1', 'merch-1', 'cust-1', 'Premium Salmon Sushi Platter', 'Sakura Sushi Dago', 1, 38000, '17:30 - 20:00 Hari Ini', 'claimed', '19:40 09/06/2026', 0, 57000),
-      ('FW-hist3', 'mock-2', 'merch-2', 'cust-1', 'Butter & Chocolate Croissant Pack', 'La Boulangerie French Bakery', 3, 54000, '16:00 - 18:30 Hari Ini', 'claimed', '17:10 09/06/2026', 0, 90000),
-      ('FW-hist4', 'mock-2', 'merch-2', 'cust-1', 'Butter & Chocolate Croissant Pack', 'La Boulangerie French Bakery', 2, 36000, '16:00 - 18:30 Hari Ini', 'claimed', '16:45 10/06/2026', 0, 60000),
-      ('FW-hist5', 'mock-3', 'merch-3', 'cust-1', 'Avocado Quinoa Green Salad Bowl', 'Healthy & Co Salad Bar', 2, 52000, '15:00 - 17:00 Hari Ini', 'claimed', '16:00 10/06/2026', 0, 78000);
+      ('FW-hist1', 'mock-1', 'merch-1', 'cust-1', 'Premium Salmon Sushi Platter', 'Sakura Sushi Dago', 2, 76000, '17:30 - 20:00 Hari Ini', 'claimed', '18:15 08/06/2026', 114000),
+      ('FW-hist2', 'mock-1', 'merch-1', 'cust-1', 'Premium Salmon Sushi Platter', 'Sakura Sushi Dago', 1, 38000, '17:30 - 20:00 Hari Ini', 'claimed', '19:40 09/06/2026', 57000),
+      ('FW-hist3', 'mock-2', 'merch-2', 'cust-1', 'Butter & Chocolate Croissant Pack', 'La Boulangerie French Bakery', 3, 54000, '16:00 - 18:30 Hari Ini', 'claimed', '17:10 09/06/2026', 90000),
+      ('FW-hist4', 'mock-2', 'merch-2', 'cust-1', 'Butter & Chocolate Croissant Pack', 'La Boulangerie French Bakery', 2, 36000, '16:00 - 18:30 Hari Ini', 'claimed', '16:45 10/06/2026', 60000),
+      ('FW-hist5', 'mock-3', 'merch-3', 'cust-1', 'Avocado Quinoa Green Salad Bowl', 'Healthy & Co Salad Bar', 2, 52000, '15:00 - 17:00 Hari Ini', 'claimed', '16:00 10/06/2026', 78000);
     `);
 
     console.log('Database Phase 2 initialization completed successfully!');

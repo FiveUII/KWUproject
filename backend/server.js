@@ -196,6 +196,26 @@ app.put('/api/listings/:id/toggle', async (req, res) => {
   }
 });
 
+// 4.5. PUT /api/listings/:id/add-stock
+app.put('/api/listings/:id/add-stock', async (req, res) => {
+  const { id } = req.params;
+  const { amount } = req.body;
+
+  try {
+    const result = await query(
+      'UPDATE listings SET quantity = quantity + $1, max_quantity = max_quantity + $1 WHERE id = $2 RETURNING *',
+      [amount, id]
+    );
+    if (result.rows.length === 0) {
+      return res.status(404).json({ error: 'Listing not found' });
+    }
+    res.json(mapListing(result.rows[0]));
+  } catch (err) {
+    console.error('Error adding stock:', err);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
 // 5. DELETE /api/listings/:id
 app.delete('/api/listings/:id', async (req, res) => {
   const { id } = req.params;
@@ -292,8 +312,8 @@ app.post('/api/orders', async (req, res) => {
 
     // Create Order
     const orderRes = await client.query(
-      `INSERT INTO orders (id, listing_id, merchant_id, customer_id, food_title, merchant_name, quantity, total_price, pickup_time, status, date, co2_saved, cash_saved)
-       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)
+      `INSERT INTO orders (id, listing_id, merchant_id, customer_id, food_title, merchant_name, quantity, total_price, pickup_time, status, date, cash_saved)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)
        RETURNING *`,
       [
         id,
@@ -307,7 +327,6 @@ app.post('/api/orders', async (req, res) => {
         pickupTime,
         status || 'pending',
         date,
-        0,
         cashSaved,
       ]
     );
@@ -411,7 +430,7 @@ app.get('/api/savings', async (req, res) => {
       const result = await query(
         `SELECT 
            COALESCE(SUM(quantity), 0)::integer AS merchant_sales,
-           COALESCE(SUM(total_price), 0)::integer AS merchant_revenue,
+           COALESCE(SUM(total_price), 0)::integer AS merchant_revenue
          FROM orders
          WHERE merchant_id = $1 AND status = 'claimed'`,
         [merchantId]

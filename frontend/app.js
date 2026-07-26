@@ -1,8 +1,9 @@
 // API Base URL (Point to the Docker container port mapped to host)
 const API_BASE_URL = 'http://localhost:5000/api';
 
+let isLoggedIn = false;
 let currentCustomerId = 'cust-1';
-let currentMerchantId = 'merch-1'; // Default active merchant profile
+let currentMerchantId = 'merch-1';
 
 let appState = {
     currentRole: 'customer', // 'customer' or 'merchant'
@@ -11,21 +12,122 @@ let appState = {
     orders: [],
     savings: {
         customerCoins: 0,
-
         customerCashSaved: 0,
         merchantSales: 0,
         merchantRevenue: 0,
-
     }
 };
 
 // Fetch initial state from the API
 async function initAppState() {
-    await refreshState();
-    // Default active role to customer on load
-    appState.currentRole = 'customer';
-    appState.customerTab = 'browse';
+    // Show landing page by default
+    showLandingPage();
 }
+
+// -----------------------------------------------------------------
+// Authentication Logic (Mock)
+// -----------------------------------------------------------------
+function showLandingPage() {
+    document.getElementById('landing-page').style.display = 'block';
+    document.getElementById('auth-page').style.display = 'none';
+    document.getElementById('customer-portal').style.display = 'none';
+    document.getElementById('merchant-portal').style.display = 'none';
+    
+    document.getElementById('header-auth-buttons').style.display = 'flex';
+    document.getElementById('header-user-controls').style.display = 'none';
+    document.getElementById('user-impact-badge').style.display = 'none';
+}
+
+function showAuthPage(type) {
+    document.getElementById('landing-page').style.display = 'none';
+    document.getElementById('auth-page').style.display = 'block';
+    document.getElementById('customer-portal').style.display = 'none';
+    document.getElementById('merchant-portal').style.display = 'none';
+
+    if (type === 'login') {
+        document.getElementById('login-form-container').style.display = 'block';
+        document.getElementById('register-form-container').style.display = 'none';
+    } else {
+        document.getElementById('login-form-container').style.display = 'none';
+        document.getElementById('register-form-container').style.display = 'block';
+    }
+}
+
+function toggleMerchantFields(role) {
+    if (role === 'merchant') {
+        document.getElementById('reg-address-group').style.display = 'block';
+    } else {
+        document.getElementById('reg-address-group').style.display = 'none';
+    }
+}
+
+function demoLogin(role) {
+    if (role === 'customer') {
+        document.getElementById('login-username').value = 'ResQHeroFavia';
+        document.getElementById('login-password').value = 'password123';
+    } else {
+        document.getElementById('login-username').value = 'SakuraSushiDago';
+        document.getElementById('login-password').value = 'password123';
+    }
+    // Auto-submit after filling demo
+    handleLogin({ preventDefault: () => {} });
+}
+
+async function handleLogin(e) {
+    if (e && e.preventDefault) e.preventDefault();
+    const username = document.getElementById('login-username').value;
+    
+    // Simple mock logic
+    if (username.toLowerCase().includes('sushi') || username.toLowerCase().includes('merchant')) {
+        isLoggedIn = true;
+        currentMerchantId = 'merch-1';
+        appState.currentRole = 'merchant';
+        document.getElementById('header-user-name').innerText = '🏢 Sakura Sushi Dago';
+    } else {
+        isLoggedIn = true;
+        currentCustomerId = 'cust-1';
+        appState.currentRole = 'customer';
+        document.getElementById('header-user-name').innerText = '🛒 ResQ Hero Favia';
+    }
+    
+    showToast('Login berhasil!', '✅');
+    
+    // Update Header UI
+    document.getElementById('header-auth-buttons').style.display = 'none';
+    document.getElementById('header-user-controls').style.display = 'flex';
+    document.getElementById('user-impact-badge').style.display = 'flex';
+    
+    // Hide auth page
+    document.getElementById('landing-page').style.display = 'none';
+    document.getElementById('auth-page').style.display = 'none';
+    
+    // Fetch data and show dashboard
+    await refreshState();
+    await setRole(appState.currentRole);
+}
+
+function handleRegister(e) {
+    if (e && e.preventDefault) e.preventDefault();
+    const role = document.getElementById('reg-role').value;
+    const name = document.getElementById('reg-name').value;
+    
+    showToast(`Registrasi sukses untuk ${name}! Silakan login.`, '🎉');
+    
+    // Clear form
+    if (e.target && e.target.reset) e.target.reset();
+    
+    // Switch to login
+    showAuthPage('login');
+}
+
+function logout() {
+    isLoggedIn = false;
+    document.getElementById('login-username').value = '';
+    document.getElementById('login-password').value = '';
+    showToast('Anda telah logout.', 'ℹ️');
+    showLandingPage();
+}
+// -----------------------------------------------------------------
 
 // Fetch lists and statistics from API and update local appState
 async function refreshState() {
@@ -74,16 +176,7 @@ async function refreshState() {
     }
 }
 
-// Profile selection change handler
-async function handleProfileChange(value) {
-    if (value.startsWith('cust-')) {
-        currentCustomerId = value;
-        setRole('customer');
-    } else if (value.startsWith('merch-')) {
-        currentMerchantId = value;
-        setRole('merchant');
-    }
-}
+// Profile selection change handler removed (handled by login)
 
 // Format Currency Utility (Indonesian Rupiah)
 function formatRupiah(number) {
@@ -133,24 +226,18 @@ function updateHeaderImpactBadge() {
 async function setRole(role) {
     appState.currentRole = role;
     
-    // Sync the profile selector dropdown value
-    const profileSelector = document.getElementById('profile-selector');
-    if (profileSelector) {
-        profileSelector.value = role === 'customer' ? currentCustomerId : currentMerchantId;
-    }
-    
     const customerView = document.getElementById('customer-portal');
     const merchantView = document.getElementById('merchant-portal');
     
     if (role === 'customer') {
-        if (customerView) customerView.classList.add('active');
-        if (merchantView) merchantView.classList.remove('active');
+        if (customerView) customerView.style.display = 'block';
+        if (merchantView) merchantView.style.display = 'none';
         
         await refreshState();
         renderCustomerPortal();
     } else {
-        if (customerView) customerView.classList.remove('active');
-        if (merchantView) merchantView.classList.add('active');
+        if (customerView) customerView.style.display = 'none';
+        if (merchantView) merchantView.style.display = 'block';
         
         // Reset merchant sub-tab on role switch
         switchMerchantTab('manage');
@@ -378,7 +465,6 @@ async function confirmCheckout() {
         pickupTime: listing.pickupTime,
         status: 'pending',
         date: dateStr,
-        co2Saved: 0,
         cashSaved: savingsAmount
     };
 
@@ -588,7 +674,8 @@ function renderMerchantListingsTable() {
                     <span class="switch-slider"></span>
                 </label>
             </td>
-            <td>
+            <td style="display: flex; gap: 0.5rem; align-items: center;">
+                <button class="btn-primary" style="padding: 4px 8px; font-size: 0.8rem;" onclick="addListingStock('${item.id}')" title="Tambah Stok">+ Stok</button>
                 <button class="btn-delete" onclick="deleteListing('${item.id}')" title="Hapus Listing"><i class="fas fa-trash-alt">🗑️</i></button>
             </td>
         `;
@@ -614,6 +701,36 @@ async function toggleListingActive(listingId, isActive) {
     } catch (e) {
         console.error('Toggle error:', e);
         showToast('Gagal mengubah status penawaran.', '⚠️');
+    }
+}
+
+// Add Stock to Listing
+async function addListingStock(listingId) {
+    const qtyStr = prompt("Berapa stok yang ingin ditambahkan?", "1");
+    if (!qtyStr) return;
+    
+    const qty = parseInt(qtyStr, 10);
+    if (isNaN(qty) || qty <= 0) {
+        alert("Jumlah stok tidak valid.");
+        return;
+    }
+    
+    try {
+        const res = await fetch(`${API_BASE_URL}/listings/${listingId}/add-stock`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ amount: qty })
+        });
+        
+        if (!res.ok) throw new Error('Gagal menambah stok.');
+        
+        await refreshState();
+        showToast(`Berhasil menambahkan ${qty} stok!`, '📦');
+        renderListingsFeed();
+        renderMerchantPortal();
+    } catch (e) {
+        console.error(e);
+        showToast('Terjadi kesalahan jaringan.', '⚠️');
     }
 }
 
@@ -911,15 +1028,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     // 1. Initialize State (Wait for backend fetch)
     await initAppState();
     
-    // 2. Set default active profile state on dropdown
-    const profileSelector = document.getElementById('profile-selector');
-    if (profileSelector) {
-        profileSelector.value = appState.currentRole === 'customer' ? currentCustomerId : currentMerchantId;
-    }
-
-    // 3. Set default customer role
-    setRole('customer');
-    
+    // 3. (Removed default setRole so landing page stays visible)
     // 4. Register Search input event
     const searchInput = document.getElementById('search-input');
     if (searchInput) {

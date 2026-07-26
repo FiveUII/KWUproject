@@ -25,35 +25,23 @@
         </div>
         
         <div class="header-controls">
-            <!-- Profile Selector Dropdown -->
-            <div class="profile-select-container" style="margin-right: 1rem; display: flex; align-items: center; gap: 0.5rem;">
-                <label for="profile-selector" style="font-size: 0.8rem; font-weight: 700; color: var(--primary-dark);">Akun:</label>
-                <select id="profile-selector" onchange="handleProfileChange(this.value)" style="padding: 0.4rem 0.8rem; border-radius: var(--radius-md); border: 2px solid var(--primary-light); background: white; font-weight: 600; cursor: pointer; color: var(--primary-dark); font-size: 0.85rem; outline: none;">
-                    <optgroup label="Konsumen">
-                        <option value="cust-1">🛒 ResQ Hero Favia</option>
-                    </optgroup>
-                    <optgroup label="Merchant F&B">
-                        <option value="merch-1">🍣 Sakura Sushi Dago</option>
-                        <option value="merch-2">🍞 La Boulangerie French Bakery</option>
-                        <option value="merch-3">🥗 Healthy & Co Salad Bar</option>
-                    </optgroup>
-                </select>
+            <!-- Auth Buttons (Visible when logged out) -->
+            <div id="header-auth-buttons" style="display: flex; gap: 0.5rem;">
+                <button class="btn-outline" onclick="showAuthPage('login')">Masuk</button>
+                <button class="btn-primary" onclick="showAuthPage('register')" style="background-color: var(--primary); color: white; border: none; padding: 0.5rem 1rem; border-radius: var(--radius-md); font-weight: 600; cursor: pointer;">Daftar</button>
             </div>
 
-            <!-- Role Switcher Toggle (Hidden, replaced by dropdown selector) -->
-            <div class="role-switch-container" style="display: none;">
-                <button id="role-customer-btn" class="role-btn active" onclick="setRole('customer')">
-                    <span>🛒</span> Konsumen
-                </button>
-                <button id="role-merchant-btn" class="role-btn" onclick="setRole('merchant')">
-                    <span>🏢</span> Merchant F&B
-                </button>
-            </div>
-            
-            <!-- Dynamic Impact Badge -->
-            <div class="user-impact-badge" id="user-impact-badge">
-                <span>Uang Dihemat:</span>
-                <span class="impact-value" id="header-eco-score">💰 Rp 0</span>
+            <!-- Logged In Controls (Visible when logged in) -->
+            <div id="header-user-controls" style="display: none; align-items: center; gap: 1rem;">
+                <div class="user-profile-display" style="font-weight: 700; color: var(--primary-dark); font-size: 0.9rem;">
+                    <span id="header-user-name">🛒 ResQ Hero</span>
+                </div>
+                <!-- Dynamic Impact Badge -->
+                <div class="user-impact-badge" id="user-impact-badge" style="display: none;">
+                    <span>Uang Dihemat:</span>
+                    <span class="impact-value" id="header-eco-score">💰 Rp 0</span>
+                </div>
+                <button class="btn-outline" onclick="logout()" style="padding: 0.3rem 0.8rem; font-size: 0.8rem;">Logout</button>
             </div>
         </div>
     </header>
@@ -61,14 +49,14 @@
     <!-- Main Container -->
     <main>
         
-        <!-- ================= CUSTOMER PORTAL ================= -->
-        <section id="customer-portal" class="dashboard-section active">
+        <!-- ================= LANDING PAGE ================= -->
+        <section id="landing-page" class="dashboard-section active">
             <!-- Hero Banner -->
             <div class="hero">
                 <div class="hero-content">
                     <h1>Selamatkan Makanan Lezat, Hemat Kantong Anda!</h1>
                     <p>Setiap hari, restoran dan kafe memiliki sisa makanan jadi yang lezat dan layak makan namun tidak terjual. Beli makanan surplus ini dengan diskon hingga 70% dan bantu kurangi food waste!</p>
-                    <button class="hero-btn" onclick="document.getElementById('explore-anchor').scrollIntoView({behavior: 'smooth'})">
+                    <button class="hero-btn" onclick="showAuthPage('login')">
                         Mulai Selamatkan Makanan <span>👉</span>
                     </button>
                 </div>
@@ -76,7 +64,73 @@
                     <img src="assets/hero.png" alt="ResQFood Hero Illustration">
                 </div>
             </div>
+        </section>
 
+        <!-- ================= AUTH PAGE ================= -->
+        <section id="auth-page" class="dashboard-section" style="display: none;">
+            <div class="auth-container">
+                <!-- Login Form -->
+                <div id="login-form-container" class="auth-card">
+                    <h2>Masuk ke ResQFood</h2>
+                    <form onsubmit="handleLogin(event)">
+                        <div class="form-group">
+                            <label for="login-username">Username</label>
+                            <input type="text" id="login-username" class="form-input" placeholder="Masukkan username" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="login-password">Password</label>
+                            <input type="password" id="login-password" class="form-input" placeholder="Masukkan password" required>
+                        </div>
+                        <button type="submit" class="btn-submit" style="width: 100%; margin-top: 1rem;">Masuk</button>
+                    </form>
+                    
+                    <div class="auth-demo-buttons">
+                        <p style="font-size: 0.8rem; text-align: center; color: var(--text-muted); margin: 1.5rem 0 0.5rem 0;">Atau masuk cepat (Demo):</p>
+                        <div style="display: flex; gap: 0.5rem;">
+                            <button class="btn-outline" style="flex: 1; font-size: 0.8rem;" onclick="demoLogin('customer')">🛒 Demo Pembeli</button>
+                            <button class="btn-outline" style="flex: 1; font-size: 0.8rem;" onclick="demoLogin('merchant')">🏢 Demo Penjual</button>
+                        </div>
+                    </div>
+
+                    <p class="auth-switch">Belum punya akun? <a href="#" onclick="showAuthPage('register'); return false;">Daftar di sini</a></p>
+                </div>
+
+                <!-- Register Form -->
+                <div id="register-form-container" class="auth-card" style="display: none;">
+                    <h2>Daftar Akun Baru</h2>
+                    <form onsubmit="handleRegister(event)">
+                        <div class="form-group">
+                            <label for="reg-role">Daftar Sebagai</label>
+                            <select id="reg-role" class="form-input" onchange="toggleMerchantFields(this.value)">
+                                <option value="customer">🛒 Pembeli (Konsumen)</option>
+                                <option value="merchant">🏢 Penjual (Merchant F&B)</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="reg-name">Nama Lengkap / Nama Toko</label>
+                            <input type="text" id="reg-name" class="form-input" placeholder="Masukkan nama" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="reg-username">Username</label>
+                            <input type="text" id="reg-username" class="form-input" placeholder="Pilih username" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="reg-password">Password</label>
+                            <input type="password" id="reg-password" class="form-input" placeholder="Buat password" required>
+                        </div>
+                        <div class="form-group" id="reg-address-group" style="display: none;">
+                            <label for="reg-address">Alamat Toko</label>
+                            <textarea id="reg-address" class="form-input" rows="2" placeholder="Alamat lengkap toko"></textarea>
+                        </div>
+                        <button type="submit" class="btn-submit" style="width: 100%; margin-top: 1rem;">Daftar Sekarang</button>
+                    </form>
+                    <p class="auth-switch">Sudah punya akun? <a href="#" onclick="showAuthPage('login'); return false;">Masuk di sini</a></p>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= CUSTOMER PORTAL ================= -->
+        <section id="customer-portal" class="dashboard-section" style="display: none;">
             <!-- Explore Anchor for scrolling -->
             <div id="explore-anchor" style="padding-top: 1rem;"></div>
 
@@ -131,7 +185,7 @@
                             <div class="stat-number" id="cust-stat-cash">Rp 0</div>
                         </div>
                     </div>
-                    <div class="stat-card">
+                    <div class="stat-card" style="display: none;">
                         <div class="stat-icon-box blue">🏆</div>
                         <div class="stat-details">
                             <h4>ResQ Poin</h4>

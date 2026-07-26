@@ -9,6 +9,11 @@ ResQFood adalah MVP (Minimum Viable Product) untuk platform manajemen makanan su
 - **Portal Konsumen:** Untuk mencari, memesan, dan melacak penghematan uang.
 - **Gamifikasi:** Pengguna mendapatkan ResQ Poin dari setiap makanan yang diselamatkan.
 
+## Prototipe Mobile (Figma) 📱🎨
+Lihat rancangan dan prototipe desain aplikasi mobile (Pembeli & Penjual) di Figma:
+👉 **[Prototipe Mobile ResQFood di Figma](https://www.figma.com/design/EApYu5MVVVyH2OnEqu2UJy/ResQFood?node-id=0-1&t=chphF15VGhsWxSGC-1)**
+
+
 ## Arsitektur & Teknologi 🛠️
 Aplikasi ini dibangun menggunakan arsitektur micro-services:
 - **Frontend:** HTML, CSS, Vanilla JS (Nginx)
